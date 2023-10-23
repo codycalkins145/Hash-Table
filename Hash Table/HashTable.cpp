@@ -310,7 +310,17 @@ int main(int argc, char* argv[]) {
 
         case 4:
             if (bidTable) {
-                bidTable->Remove(bidKey);
+                bid = bidTable->Search(bidKey);
+
+                if (!bid.bidId.empty()) {
+                    bidTable->Remove(bidKey);
+
+                    cout << "Bid with ID " + bidKey + " removed." << endl;
+                }
+                else {
+                    cout << "Bid Id " + bidKey + " not found." << endl;
+                }
+                
             }
             else {
                 cout << "No bids loaded." << endl;
