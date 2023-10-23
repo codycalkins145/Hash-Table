@@ -195,8 +195,6 @@ void loadBids(string csvPath, HashTable* hashTable) {
 			bid.fund = file[i][8];
 			bid.amount = strToDouble(file[i][4], '$');
 
-			//cout << "Item: " << bid.title << ", Fund: " << bid.fund << ", Amount: " << bid.amount << endl;
-
 			// push this bid to the end
 			hashTable->Insert(bid);
 		}
@@ -229,7 +227,7 @@ int main(int argc, char* argv[]) {
     switch (argc) {
     case 2:
         csvPath = argv[1];
-        bidKey = "98268";
+        bidKey = "98259"; // change to an existing ID to be used for finding
         break;
     case 3:
         csvPath = argv[1];
@@ -237,7 +235,7 @@ int main(int argc, char* argv[]) {
         break;
     default:
         csvPath = "eBid_Monthly_Sales_Dec_2016.csv";
-        bidKey = "98268";
+        bidKey = "98259"; // change to an existing ID to be used for removal
     }
 
     // Define a timer variable
@@ -258,6 +256,7 @@ int main(int argc, char* argv[]) {
         cout << "  9. Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
+        cout << endl;
 
         switch (choice) {
 
@@ -270,8 +269,6 @@ int main(int argc, char* argv[]) {
             // Complete the method call to load the bids
             loadBids(csvPath, bidTable);
 
-            //cout << bidTable << endl;
-
             // Calculate elapsed time and display result
             ticks = clock() - ticks; // current clock ticks minus starting clock ticks
             cout << "time: " << ticks << " clock ticks" << endl;
@@ -279,30 +276,50 @@ int main(int argc, char* argv[]) {
             break;
 
         case 2:
-            bidTable->PrintAll();
+            if (bidTable) {
+                bidTable->PrintAll();
+            }
+            else {
+                cout << "No bids loaded." << endl;
+            }
+            
             break;
 
         case 3:
-            ticks = clock();
+            if (bidTable) {
+                ticks = clock();
 
-            bid = bidTable->Search(bidKey);
+                bid = bidTable->Search(bidKey);
 
-            ticks = clock() - ticks; // current clock ticks minus starting clock ticks
+                ticks = clock() - ticks; // current clock ticks minus starting clock ticks
 
-            if (!bid.bidId.empty()) {
-                displayBid(bid);
-            } else {
-                cout << "Bid Id " << bidKey << " not found." << endl;
+                if (!bid.bidId.empty()) {
+                    displayBid(bid);
+                }
+                else {
+                    cout << "Bid Id " << bidKey << " not found." << endl;
+                }
+
+                cout << "time: " << ticks << " clock ticks" << endl;
+                cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
             }
-
-            cout << "time: " << ticks << " clock ticks" << endl;
-            cout << "time: " << ticks * 1.0 / CLOCKS_PER_SEC << " seconds" << endl;
+            else {
+                cout << "No bids loaded." << endl;
+            }
             break;
 
         case 4:
-            bidTable->Remove(bidKey);
+            if (bidTable) {
+                bidTable->Remove(bidKey);
+            }
+            else {
+                cout << "No bids loaded." << endl;
+            }
+            
             break;
         }
+
+        cout << endl;
     }
 
     cout << "Good Bye." << endl;
